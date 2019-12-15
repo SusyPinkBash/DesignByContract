@@ -46,6 +46,7 @@ public class QuickSort<T extends Comparable<T>> implements Contract {
     }
 
     @Requires({"start_less_than_finish, indexInBound"})
+    @Ensures("sorted")
     private static <T extends Comparable<T>> void sort(int index, int start, int finish, T[] unsorted) {
         int pivotIndex = start + index;
         T pivot = unsorted[pivotIndex];
@@ -81,7 +82,7 @@ public class QuickSort<T extends Comparable<T>> implements Contract {
         return length / 2;
     }
 
-    @Requires({"nonEmpty", "indexesInBound"})
+    @Requires("indexesInBound")
     @Ensures({"swapped", "sizeNotChanged"})
     private static <T extends Comparable<T>> void swap(int index1, int index2, T[] unsorted) {
         T index2Element = unsorted[index1];
@@ -90,11 +91,21 @@ public class QuickSort<T extends Comparable<T>> implements Contract {
     }
 
 
-    // ########## PRE AND POST CONDITIONS FUNCTIONS ##########
+    // ########## INVARIANTS, PRE AND POST CONDITIONS FUNCTIONS ##########
 
+    @Invariant
     @Pure
     public static <T extends Comparable<T>> boolean nonEmpty(T[] unsorted) {
         return unsorted.length > 0;
+    }
+
+    @Pure
+    public static <T extends Comparable<T>> boolean sorted(T[] unsorted) {
+        for (int i =0; i < unsorted.length-1; ++i){
+            if (unsorted[i+1].compareTo(unsorted[i]) < 0)
+                return false;
+        }
+        return true;
     }
 
     @Pure

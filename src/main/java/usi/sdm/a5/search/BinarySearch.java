@@ -1,7 +1,6 @@
 package usi.sdm.a5.search;
 
-
-import ch.usi.si.codelounge.jsicko.Contract;
+import static ch.usi.si.codelounge.jsicko.Contract.*;
 import static ch.usi.si.codelounge.jsicko.Contract.old;
 
 import java.util.Arrays;
@@ -9,24 +8,25 @@ import java.util.Arrays;
 public class BinarySearch {
     private static final int SWITCH_TO_BRUTE_FORCE = 200;
 
-    private static int[] sorted = null;
+    private static int[] sorted;
 
     // Assuming the array is sorted
-    @Contract.Pure
-    @Contract.Requires({"sorted", "nonEmpty"})
-    @Contract.Ensures({"valueAtIndex", "arrayHasNoChanges"})
+    @Pure
+    @Requires({"sorted", "nonEmpty"})
+    @Ensures({"valueAtIndex", "arrayHasNoChanges"})
     public static final int find(int value, int[] array, boolean optimize) {
         BinarySearch.sorted = array;
         try {
             return recursiveFind(value, 0, BinarySearch.sorted.length - 1, optimize);
-        } finally {
+        }
+        finally {
             BinarySearch.sorted = null;
         }
     }
 
-    @Contract.Pure
-    @Contract.Requires({"sorted", "nonEmpty"})
-    @Contract.Ensures({"valueAtIndex", "arrayHasNoChanges"})
+    @Pure
+    @Requires({"sorted", "nonEmpty"})
+    @Ensures({"valueAtIndex", "arrayHasNoChanges"})
     private static int recursiveFind(int value, int start, int end, boolean optimize) {
         if (start == end) {
             int lastValue = sorted[start]; // start==end
@@ -52,9 +52,8 @@ public class BinarySearch {
         return recursiveFind(value, start, middle - 1, optimize);
     }
 
-    @Contract.Pure
-    @Contract.Requires({"nonEmpty", "sorted"})
-    @Contract.Ensures({"valueAtIndex", "arrayHasNoChanges"})
+    @Pure
+    @Requires("valueInBound")
     private static final int linearSearch(int value, int start, int end) {
         for (int i = start; i <= end; i++) {
             int iValue = sorted[i];
@@ -64,14 +63,14 @@ public class BinarySearch {
         return Integer.MAX_VALUE;
     }
 
-    // ########## PRE AND POST CONDITIONS FUNCTIONS ##########
+    // ########## INVARIANTS, PRE AND POST CONDITIONS FUNCTIONS ##########
 
-    @Contract.Pure
+    @Pure
     public static boolean nonEmpty(int[] array) {
         return array.length > 0;
     }
 
-    @Contract.Pure
+    @Pure
     public static <T extends Comparable<T>> boolean sorted(int[] array) {
         for (int i=0; i+1 < array.length; ++i) {
             if (array[i] > (array[i+1]))
@@ -80,12 +79,12 @@ public class BinarySearch {
         return true;
     }
 
-    @Contract.Pure
+    @Pure
     public static <T extends Comparable<T>> boolean valueAtIndex(int returns, int value, int[] array, boolean optimize) {
         return (returns != Integer.MAX_VALUE && array[returns] == value) || Arrays.stream(array).noneMatch(elem -> elem == value);
     }
 
-    @Contract.Pure
+    @Pure
     public static boolean arrayHasNoChanges(int[] array) {
         if (array.length != old(array.length)) return false;
         for (int i=0; i < array.length; ++i) {
@@ -93,5 +92,10 @@ public class BinarySearch {
                 return false;
         }
         return true;
+    }
+
+    @Pure
+    public static <T extends Comparable<T>> boolean valueInBound(int value, int start, int end) {
+        return value > start && value < end;
     }
 }

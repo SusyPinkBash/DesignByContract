@@ -5,15 +5,16 @@ import ch.usi.si.codelounge.jsicko.Contract;
 import java.util.BitSet;
 import java.util.StringTokenizer;
 
+import static ch.usi.si.codelounge.jsicko.Contract.*;
 import static ch.usi.si.codelounge.jsicko.Contract.old;
 
 public class StringFunctions {
 
     private static final char SPACE = ' ';
 
-    @Contract.Pure
-    @Contract.Requires("stringExists")
-    @Contract.Ensures("stringIsReversed")
+    @Pure
+    @Requires("stringExists")
+    @Ensures("stringIsReversed")
     public static final String reverseWithStringConcat(String string) {
         String output = new String();
         for (int i = (string.length() - 1); i >= 0; i--) {
@@ -22,9 +23,9 @@ public class StringFunctions {
         return output;
     }
 
-    @Contract.Pure
-    @Contract.Requires("stringExists")
-    @Contract.Ensures("stringIsReversed")
+    @Pure
+    @Requires("stringExists")
+    @Ensures("stringIsReversed")
     public static final String reverseWithStringBuilder(String string) {
         final StringBuilder builder = new StringBuilder();
         for (int i = (string.length() - 1); i >= 0; i--) {
@@ -33,17 +34,17 @@ public class StringFunctions {
         return builder.toString();
     }
 
-    @Contract.Pure
-    @Contract.Requires("stringExists")
-    @Contract.Ensures("stringIsReversed")
+    @Pure
+    @Requires("stringExists")
+    @Ensures("stringIsReversed")
     public static final String reverseWithStringBuilderBuiltinMethod(String string) {
         final StringBuilder builder = new StringBuilder(string);
         return builder.reverse().toString();
     }
 
-    @Contract.Pure
-    @Contract.Requires("stringExists")
-    @Contract.Ensures("stringIsReversed")
+    @Pure
+    @Requires("stringExists")
+    @Ensures("stringIsReversed")
     public static final String reverseWithSwaps(String string) {
         final char[] array = string.toCharArray();
         final int length = array.length - 1;
@@ -58,9 +59,9 @@ public class StringFunctions {
         return String.valueOf(array);
     }
 
-    @Contract.Pure
-    @Contract.Requires("stringExists")
-    @Contract.Ensures("stringIsReversed")
+    @Pure
+    @Requires("stringExists")
+    @Ensures("stringIsReversed")
     public static final String reverseWithXOR(String string) {
         final char[] array = string.toCharArray();
         final int length = array.length;
@@ -74,9 +75,9 @@ public class StringFunctions {
         return String.valueOf(array);
     }
 
-    @Contract.Pure
-    @Contract.Requires("stringExists")
-    @Contract.Ensures("stringIsReversed")
+    @Pure
+    @Requires("stringExists")
+    @Ensures("stringIsReversed")
     public static final String reverseWordsByCharWithAdditionalStorage(String string) {
         final StringBuilder builder = new StringBuilder();
         final int length = string.length() - 1;
@@ -101,9 +102,9 @@ public class StringFunctions {
         return builder.toString();
     }
 
-    @Contract.Pure
-    @Contract.Requires("stringExists")
-    @Contract.Ensures("stringIsReversed")
+    @Pure
+    @Requires("stringExists")
+    @Ensures("stringIsReversed")
     public static final String reverseWordsUsingStringTokenizerWithAdditionalStorage(String string) {
         final StringTokenizer st = new StringTokenizer(string);
         String output = new String();
@@ -114,9 +115,9 @@ public class StringFunctions {
         return output.trim();
     }
 
-    @Contract.Pure
-    @Contract.Requires("stringExists")
-    @Contract.Ensures("stringIsReversed")
+    @Pure
+    @Requires("stringExists")
+    @Ensures("stringIsReversed")
     public static final String reverseWordsUsingSplitWithAdditionalStorage(String string) {
         final StringBuilder builder = new StringBuilder();
         final String[] temp = string.split(" ");
@@ -127,9 +128,9 @@ public class StringFunctions {
         return builder.toString().trim();
     }
 
-    @Contract.Pure
-    @Contract.Requires("stringExists")
-    @Contract.Ensures("stringIsReversed")
+    @Pure
+    @Requires("stringExists")
+    @Ensures("stringIsReversed")
     public static final String reverseWordsInPlace(String string) {
         char[] chars = string.toCharArray();
 
@@ -165,8 +166,8 @@ public class StringFunctions {
     }
 
 
-    @Contract.Requires({"arrayNotEmpty", "indexesInBound"})
-    @Contract.Ensures("wordsAreSwapped")
+    @Requires({"arrayNotEmpty", "indexesInBound"})
+    @Ensures("wordsAreSwapped")
     private static final void swapWords(int startA, int endA, int startB, int endB, char[] array) {
         int lengthA = endA - startA + 1;
         int lengthB = endB - startB + 1;
@@ -206,29 +207,42 @@ public class StringFunctions {
         }
     }
 
-    @Contract.Requires("startAndEnd")
-    @Contract.Ensures("shiftRightCorrect")
+    @Requires("startAndEnd")
+    @Ensures("shiftRightCorrect")
     private static final void shiftRight(int start, int end, char[] array) {
         for (int i = end; i > start; i--) {
             array[i] = array[i - 1];
         }
     }
 
-    @Contract.Requires("startAndEnd")
-    @Contract.Ensures("shiftLeftCorrect")
+    @Requires("startAndEnd")
+    @Ensures("shiftLeftCorrect")
     private static final void shiftLeft(int start, int end, char[] array) {
         for (int i = start; i < end; i++) {
             array[i] = array[i + 1];
         }
     }
-    // ########## PRE AND POST CONDITIONS FUNCTIONS ##########
 
-    @Contract.Pure
+    // ########## INVARIANTS, PRE AND POST CONDITIONS FUNCTIONS ##########
+
+    @Invariant
+    @Pure
+    public static <T extends Comparable<T>> boolean nonEmpty(char[] array) {
+        return array.length > 0;
+    }
+
+    @Invariant
+    @Pure
+    public static <T extends Comparable<T>> boolean stringNonNull(String string) {
+        return string != null;
+    }
+
+    @Pure
     static boolean stringExists (String string) {
         return string != null;
     }
 
-    @Contract.Pure
+    @Pure
     static boolean stringIsReversed (String string) {
         int len = string.length();
         if (len != old(string).length())
@@ -241,7 +255,7 @@ public class StringFunctions {
     }
 
 
-    @Contract.Pure
+    @Pure
    static boolean shiftRightCorrect(int start, int end, char[] array) {
        for(int i = start; i< end; ++i) {
            if (array[i] != old(array)[i + 1])
@@ -250,7 +264,7 @@ public class StringFunctions {
        return true;
     }
 
-    @Contract.Pure
+    @Pure
    static boolean shiftLeftCorrect(int start, int end, char[] array) {
        for(int i = start; i< end; --i) {
            if (array[i] != old(array)[i - 1])
@@ -259,23 +273,23 @@ public class StringFunctions {
        return true;
     }
 
-    @Contract.Pure
+    @Pure
     static boolean startAndEnd(int start, int end){
         return end > start;
     }
 
 
-    @Contract.Pure
+    @Pure
     static boolean arrayNotEmpty(int startA, int endA, int startB, int endB, char[] array) {
         return array.length > 0;
     }
 
-    @Contract.Pure
+    @Pure
     static boolean indexesInBound(int startA, int endA, int startB, int endB, char[] array) {
         return startA > 0 && startA < endA && endA < startB && startB < endB && endB < array.length;
     }
 
-    @Contract.Pure
+    @Pure
     static boolean wordsAreSwapped(int startA, int endA, int startB, int endB, char[] array) {
         char[] old = old(array);
         if (array.length != old.length)

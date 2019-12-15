@@ -27,8 +27,8 @@ public class BubbleSort<T extends Comparable<T>> implements Contract{
     }
 
 
-    @Requires({"nonEmpty", "indexesInBound"})
-    @Ensures({"swapped", "sizeNotChanged"})
+    @Requires("indexesInBound")
+    @Ensures({"swapped", "sizeNotChanged    "})
     private static <T extends Comparable<T>> void swap(int index1, int index2, T[] unsorted) {
         T value = unsorted[index1];
         unsorted[index1] = unsorted[index2];
@@ -36,8 +36,9 @@ public class BubbleSort<T extends Comparable<T>> implements Contract{
     }
 
 
-    // ########## PRE AND POST CONDITIONS FUNCTIONS ##########
+    // ########## INVARIANTS, PRE AND POST CONDITIONS FUNCTIONS ##########
 
+    @Invariant
     @Pure
     public static <T extends Comparable<T>> boolean nonEmpty(T[] unsorted) {
         return unsorted.length > 0;

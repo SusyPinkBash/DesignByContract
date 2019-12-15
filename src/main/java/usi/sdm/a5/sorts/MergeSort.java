@@ -1,7 +1,9 @@
 package usi.sdm.a5.sorts;
 
 
-import ch.usi.si.codelounge.jsicko.Contract;
+import ch.usi.si.codelounge.jsicko.Contract.Pure;
+
+import static ch.usi.si.codelounge.jsicko.Contract.*;
 
 @SuppressWarnings("unchecked")
 public class MergeSort<T extends Comparable<T>> {
@@ -14,8 +16,8 @@ public class MergeSort<T extends Comparable<T>> {
         sort(type, 0, unsorted.length, unsorted);
         return unsorted;
     }
-    @Contract.Requires("indexesInBound")
-    @Contract.Ensures("sortedInGivenBound")
+    @Requires("indexesInBound")
+    @Ensures("sortedInGivenBound")
     private static <T extends Comparable<T>> void sort(SPACE_TYPE type, int start, int length, T[] unsorted) {
         if (length > 2) {
             int aLength = (int) Math.floor(length / 2);
@@ -35,8 +37,8 @@ public class MergeSort<T extends Comparable<T>> {
         }
     }
 
-    @Contract.Requires("subarraysInBound")
-    @Contract.Ensures("sortedInGivenBounds")
+    @Requires("subarraysInBound")
+    @Ensures("sortedInGivenBounds")
     private static <T extends Comparable<T>> void mergeInPlace(int aStart, int aLength, int bStart, int bLength, T[] unsorted) {
         int i = aStart;
         int j = bStart;
@@ -58,8 +60,8 @@ public class MergeSort<T extends Comparable<T>> {
         }
     }
 
-    @Contract.Requires("subarraysInBound")
-    @Contract.Ensures("sortedInGivenBounds")
+    @Requires("subarraysInBound")
+    @Ensures("sortedInGivenBounds")
     private static <T extends Comparable<T>> void mergeWithExtraStorage(int aStart, int aLength, int bStart, int bLength, T[] unsorted) {
         int count = 0;
         T[] output = (T[]) new Comparable[aLength + bLength];
@@ -98,9 +100,15 @@ public class MergeSort<T extends Comparable<T>> {
     }
 
 
-    // ########## PRE AND POST CONDITIONS FUNCTIONS ##########
+    // ########## INVARIANTS, PRE AND POST CONDITIONS FUNCTIONS ##########
 
-    @Contract.Pure
+    @Invariant
+    @Pure
+    public static <T extends Comparable<T>> boolean nonEmpty(T[] unsorted) {
+        return unsorted.length > 0;
+    }
+
+    @Pure
     public static <T extends Comparable<T>> boolean sortedInGivenBounds(int aStart, int aLength, int bStart, int bLength, T[] unsorted) {
         int aSize = aStart + aLength - 1;
         int bSize = bStart + bLength - 1;
@@ -115,7 +123,7 @@ public class MergeSort<T extends Comparable<T>> {
         return true;
     }
 
-    @Contract.Pure
+    @Pure
     public static <T extends Comparable<T>> boolean sortedInGivenBound(int start, int length, T[] unsorted) {
         int size = start + length - 1;
         for (int a = start; a < size; ++a) {
@@ -125,12 +133,12 @@ public class MergeSort<T extends Comparable<T>> {
         return true;
     }
 
-    @Contract.Pure
+    @Pure
     public static <T extends Comparable<T>> boolean indexesInBound(int start, int length, T[] unsorted) {
         return length - start < unsorted.length/2;
     }
 
-    @Contract.Pure
+    @Pure
     public static <T extends Comparable<T>> boolean subarraysInBound(int aStart, int aLength, int bStart, int bLength, T[] unsorted) {
         return (aStart + aLength) < unsorted.length/2 && (bStart + bLength) > unsorted.length/2 && (bStart + bLength) <= unsorted.length;
     }
