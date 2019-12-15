@@ -82,7 +82,7 @@ public class QuickSort<T extends Comparable<T>> implements Contract {
     }
 
     @Requires({"nonEmpty", "indexesInBound"})
-    @Ensures({"swapped", "size_not_changed"})
+    @Ensures({"swapped", "sizeNotChanged"})
     private static <T extends Comparable<T>> void swap(int index1, int index2, T[] unsorted) {
         T index2Element = unsorted[index1];
         unsorted[index1] = unsorted[index2];
@@ -118,7 +118,7 @@ public class QuickSort<T extends Comparable<T>> implements Contract {
     }
 
     @Pure
-    protected static <T extends Comparable<T>> boolean size_not_changed(T[] unsorted) {
+    protected static <T extends Comparable<T>> boolean sizeNotChanged(T[] unsorted) {
         return unsorted.length == old(unsorted).length;
     }
 }

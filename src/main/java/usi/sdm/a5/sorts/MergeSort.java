@@ -14,8 +14,8 @@ public class MergeSort<T extends Comparable<T>> {
         sort(type, 0, unsorted.length, unsorted);
         return unsorted;
     }
-    @Contract.Requires("indexedInBound")
-    @Contract.Ensures("sorted")
+    @Contract.Requires("indexesInBound")
+    @Contract.Ensures("sortedInGivenBound")
     private static <T extends Comparable<T>> void sort(SPACE_TYPE type, int start, int length, T[] unsorted) {
         if (length > 2) {
             int aLength = (int) Math.floor(length / 2);
@@ -36,7 +36,7 @@ public class MergeSort<T extends Comparable<T>> {
     }
 
     @Contract.Requires("subarraysInBound")
-    @Contract.Ensures("sorted")
+    @Contract.Ensures("sortedInGivenBounds")
     private static <T extends Comparable<T>> void mergeInPlace(int aStart, int aLength, int bStart, int bLength, T[] unsorted) {
         int i = aStart;
         int j = bStart;
@@ -59,7 +59,7 @@ public class MergeSort<T extends Comparable<T>> {
     }
 
     @Contract.Requires("subarraysInBound")
-    @Contract.Ensures("sorted")
+    @Contract.Ensures("sortedInGivenBounds")
     private static <T extends Comparable<T>> void mergeWithExtraStorage(int aStart, int aLength, int bStart, int bLength, T[] unsorted) {
         int count = 0;
         T[] output = (T[]) new Comparable[aLength + bLength];
@@ -101,7 +101,7 @@ public class MergeSort<T extends Comparable<T>> {
     // ########## PRE AND POST CONDITIONS FUNCTIONS ##########
 
     @Contract.Pure
-    public static <T extends Comparable<T>> boolean sorted(int aStart, int aLength, int bStart, int bLength, T[] unsorted) {
+    public static <T extends Comparable<T>> boolean sortedInGivenBounds(int aStart, int aLength, int bStart, int bLength, T[] unsorted) {
         int aSize = aStart + aLength - 1;
         int bSize = bStart + bLength - 1;
         for (int a = aStart; a < aSize; ++a) {
@@ -116,7 +116,7 @@ public class MergeSort<T extends Comparable<T>> {
     }
 
     @Contract.Pure
-    public static <T extends Comparable<T>> boolean sorted(int start, int length, T[] unsorted) {
+    public static <T extends Comparable<T>> boolean sortedInGivenBound(int start, int length, T[] unsorted) {
         int size = start + length - 1;
         for (int a = start; a < size; ++a) {
             if (unsorted[a+1].compareTo(unsorted[a]) < 0)
@@ -126,7 +126,7 @@ public class MergeSort<T extends Comparable<T>> {
     }
 
     @Contract.Pure
-    public static <T extends Comparable<T>> boolean indexedInBound(SPACE_TYPE type, int start, int length, T[] unsorted) {
+    public static <T extends Comparable<T>> boolean indexesInBound(int start, int length, T[] unsorted) {
         return length - start < unsorted.length/2;
     }
 
