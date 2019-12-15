@@ -45,7 +45,7 @@ public class QuickSort<T extends Comparable<T>> implements Contract {
         return unsorted;
     }
 
-    @Requires({"start_less_than_finish, index_inBound"})
+    @Requires({"start_less_than_finish, indexInBound"})
     private static <T extends Comparable<T>> void sort(int index, int start, int finish, T[] unsorted) {
         int pivotIndex = start + index;
         T pivot = unsorted[pivotIndex];
@@ -81,20 +81,44 @@ public class QuickSort<T extends Comparable<T>> implements Contract {
         return length / 2;
     }
 
+    @Requires({"nonEmpty", "indexesInBound"})
+    @Ensures({"swapped", "size_not_changed"})
     private static <T extends Comparable<T>> void swap(int index1, int index2, T[] unsorted) {
         T index2Element = unsorted[index1];
         unsorted[index1] = unsorted[index2];
         unsorted[index2] = index2Element;
     }
 
+
+    // ########## PRE AND POST CONDITIONS FUNCTIONS ##########
+
     @Pure
-    static boolean start_less_than_finish(int start, int finish ) {
+    public static <T extends Comparable<T>> boolean nonEmpty(T[] unsorted) {
+        return unsorted.length > 0;
+    }
+
+    @Pure
+    public static <T extends Comparable<T>> boolean indexInBound(int index, int start, int finish, T[] unsorted) {
+        return index < unsorted.length;
+    }
+
+    @Pure
+    static boolean start_less_than_finish(int start, int finish) {
         return start < finish;
     }
 
     @Pure
-    static  <T extends Comparable<T>> boolean index_inBound(int index, T[] unsorted ) {
-        return unsorted[index] != null;
+    public static <T extends Comparable<T>> boolean swapped(int index1, int index2, T[] unsorted) {
+        return (old(unsorted[index1]) == unsorted[index2] && (old(unsorted[index2]) == unsorted[index1]));
     }
 
+    @Pure
+    public static <T extends Comparable<T>> boolean indexesInBound(int index1, int index2, T[] unsorted) {
+        return index1 >= 0 && index1 < index2 && index2 < unsorted.length;
+    }
+
+    @Pure
+    protected static <T extends Comparable<T>> boolean size_not_changed(T[] unsorted) {
+        return unsorted.length == old(unsorted).length;
+    }
 }

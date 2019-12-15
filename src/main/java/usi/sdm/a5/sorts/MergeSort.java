@@ -14,7 +14,7 @@ public class MergeSort<T extends Comparable<T>> {
         sort(type, 0, unsorted.length, unsorted);
         return unsorted;
     }
-    @Contract.Requires("subarrayInBound")
+    @Contract.Requires("indexedInBound")
     @Contract.Ensures("sorted")
     private static <T extends Comparable<T>> void sort(SPACE_TYPE type, int start, int length, T[] unsorted) {
         if (length > 2) {
@@ -97,6 +97,7 @@ public class MergeSort<T extends Comparable<T>> {
         }
     }
 
+
     // ########## PRE AND POST CONDITIONS FUNCTIONS ##########
 
     @Contract.Pure
@@ -125,7 +126,7 @@ public class MergeSort<T extends Comparable<T>> {
     }
 
     @Contract.Pure
-    public static <T extends Comparable<T>> boolean subarrayInBound(SPACE_TYPE type, int start, int length, T[] unsorted) {
+    public static <T extends Comparable<T>> boolean indexedInBound(SPACE_TYPE type, int start, int length, T[] unsorted) {
         return length - start < unsorted.length/2;
     }
 
