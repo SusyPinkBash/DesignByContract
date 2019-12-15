@@ -1,4 +1,4 @@
-package ch.usi.si.codelounge.jsicko.tutorials.sorts;
+package usi.sdm.a5.sorts;
 
 import ch.usi.si.codelounge.jsicko.Contract;
 import static ch.usi.si.codelounge.jsicko.Contract.old;

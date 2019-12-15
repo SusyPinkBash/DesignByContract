@@ -1,4 +1,4 @@
-package ch.usi.si.codelounge.jsicko.tutorials.sorts;
+package usi.sdm.a5.sorts;
 
 /**
  * Merge sort is an O(n log n) comparison-based sorting algorithm. Most
