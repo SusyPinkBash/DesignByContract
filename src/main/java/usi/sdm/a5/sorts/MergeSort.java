@@ -1,22 +1,8 @@
 package usi.sdm.a5.sorts;
 
-/**
- * Merge sort is an O(n log n) comparison-based sorting algorithm. Most
- * implementations produce a stable sort, which means that the implementation
- * preserves the input order of equal elements in the sorted output. 
- * <p>
- * Family: Merging.<br>
- * Space: In-place.<br>
- * Stable: True.<br>
- * <p>
- * Average case = O(n*log n)<br>
- * Worst case = O(n*log n)<br>
- * Best case = O(n*log n)<br>
- * <p>
- * @see <a href="https://en.wikipedia.org/wiki/Merge_sort">Merge Sort (Wikipedia)</a>
- * <br>
- * @author Justin Wetherell <phishman3579@gmail.com>
- */
+
+import ch.usi.si.codelounge.jsicko.Contract;
+
 @SuppressWarnings("unchecked")
 public class MergeSort<T extends Comparable<T>> {
 
@@ -28,7 +14,8 @@ public class MergeSort<T extends Comparable<T>> {
         sort(type, 0, unsorted.length, unsorted);
         return unsorted;
     }
-
+    @Contract.Requires("subarrayInBound")
+    @Contract.Ensures("sorted")
     private static <T extends Comparable<T>> void sort(SPACE_TYPE type, int start, int length, T[] unsorted) {
         if (length > 2) {
             int aLength = (int) Math.floor(length / 2);
@@ -48,6 +35,8 @@ public class MergeSort<T extends Comparable<T>> {
         }
     }
 
+    @Contract.Requires("subarraysInBound")
+    @Contract.Ensures("sorted")
     private static <T extends Comparable<T>> void mergeInPlace(int aStart, int aLength, int bStart, int bLength, T[] unsorted) {
         int i = aStart;
         int j = bStart;
@@ -69,6 +58,8 @@ public class MergeSort<T extends Comparable<T>> {
         }
     }
 
+    @Contract.Requires("subarraysInBound")
+    @Contract.Ensures("sorted")
     private static <T extends Comparable<T>> void mergeWithExtraStorage(int aStart, int aLength, int bStart, int bLength, T[] unsorted) {
         int count = 0;
         T[] output = (T[]) new Comparable[aLength + bLength];
@@ -104,5 +95,42 @@ public class MergeSort<T extends Comparable<T>> {
         for (int y = aStart; y < size; y++) {
             unsorted[y] = output[x++];
         }
+    }
+
+    // ########## PRE AND POST CONDITIONS FUNCTIONS ##########
+
+    @Contract.Pure
+    public static <T extends Comparable<T>> boolean sorted(int aStart, int aLength, int bStart, int bLength, T[] unsorted) {
+        int aSize = aStart + aLength - 1;
+        int bSize = bStart + bLength - 1;
+        for (int a = aStart; a < aSize; ++a) {
+            if (unsorted[a+1].compareTo(unsorted[a]) < 0)
+                return false;
+        }
+        for (int b = bStart; b < bSize; ++b) {
+            if (unsorted[b+1].compareTo(unsorted[b]) < 0)
+                return false;
+        }
+        return true;
+    }
+
+    @Contract.Pure
+    public static <T extends Comparable<T>> boolean sorted(int start, int length, T[] unsorted) {
+        int size = start + length - 1;
+        for (int a = start; a < size; ++a) {
+            if (unsorted[a+1].compareTo(unsorted[a]) < 0)
+                return false;
+        }
+        return true;
+    }
+
+    @Contract.Pure
+    public static <T extends Comparable<T>> boolean subarrayInBound(SPACE_TYPE type, int start, int length, T[] unsorted) {
+        return length - start < unsorted.length/2;
+    }
+
+    @Contract.Pure
+    public static <T extends Comparable<T>> boolean subarraysInBound(int aStart, int aLength, int bStart, int bLength, T[] unsorted) {
+        return (aStart + aLength) < unsorted.length/2 && (bStart + bLength) > unsorted.length/2 && (bStart + bLength) <= unsorted.length;
     }
 }

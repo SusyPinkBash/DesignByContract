@@ -9,7 +9,7 @@ public class BubbleSort<T extends Comparable<T>> implements Contract{
     private BubbleSort() { }
 
     @Requires("nonEmpty")
-    @Ensures("sorted")
+    @Ensures({"sorted", "size_not_changed"})
     public static <T extends Comparable<T>> T[] sort(T[] unsorted) {
         boolean swapped = true;
         int length = unsorted.length;
@@ -28,7 +28,7 @@ public class BubbleSort<T extends Comparable<T>> implements Contract{
 
 
     @Requires({"nonEmpty", "indexesInBound"})
-    @Ensures("swapped")
+    @Ensures({"swapped", "size_not_changed"})
     private static <T extends Comparable<T>> void swap(int index1, int index2, T[] unsorted) {
         T value = unsorted[index1];
         unsorted[index1] = unsorted[index2];
@@ -64,7 +64,7 @@ public class BubbleSort<T extends Comparable<T>> implements Contract{
     }
 
     @Pure
-    protected <T extends Comparable<T>> boolean size_not_changed(T[] unsorted) {
+    protected static <T extends Comparable<T>> boolean size_not_changed(T[] unsorted) {
         return unsorted.length == old(unsorted).length;
 
     }

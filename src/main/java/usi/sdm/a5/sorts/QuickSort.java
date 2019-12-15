@@ -72,6 +72,7 @@ public class QuickSort<T extends Comparable<T>> implements Contract {
         }
     }
 
+    @Pure
     private static final int getRandom(int length) {
         if (type == PIVOT_TYPE.RANDOM && length > 0)
             return RAND.nextInt(length);
@@ -87,12 +88,12 @@ public class QuickSort<T extends Comparable<T>> implements Contract {
     }
 
     @Pure
-    protected boolean start_less_than_finish(int start, int finish ) {
+    static boolean start_less_than_finish(int start, int finish ) {
         return start < finish;
     }
-    @Pure
-    protected boolean index_inBound(int index, T[] unsorted ) {
 
+    @Pure
+    static  <T extends Comparable<T>> boolean index_inBound(int index, T[] unsorted ) {
         return unsorted[index] != null;
     }
 
